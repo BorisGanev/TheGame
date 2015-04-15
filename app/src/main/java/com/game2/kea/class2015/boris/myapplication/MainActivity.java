@@ -1,7 +1,8 @@
 package com.game2.kea.class2015.boris.myapplication;
 
-import android.support.v7.app.ActionBarActivity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +15,10 @@ public class MainActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this,R.raw.asd);
+
+        mediaPlayer.start();
     }
 
 
