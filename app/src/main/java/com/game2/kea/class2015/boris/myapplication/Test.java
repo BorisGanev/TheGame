@@ -6,4 +6,5 @@ package com.game2.kea.class2015.boris.myapplication;
 public class Test
 {
     int kk;
+    int oliwer;
 }
