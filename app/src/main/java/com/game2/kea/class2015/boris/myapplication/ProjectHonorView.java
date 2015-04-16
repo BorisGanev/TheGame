@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.View;
 
 /**
@@ -36,7 +34,7 @@ public class ProjectHonorView extends View
     }
 
 
-    protected void onDraw(Canvas canvas)
+    protected void Draw(Canvas canvas)
     {
         canvas.drawBitmap(titleGraphic, 15 + (screenW - titleGraphic.getWidth()) / 2, 40, null);
 
