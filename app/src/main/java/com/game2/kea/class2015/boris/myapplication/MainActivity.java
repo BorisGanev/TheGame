@@ -16,7 +16,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this,R.raw.asd);
+        MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.asd);
 
         mediaPlayer.start();
     }
