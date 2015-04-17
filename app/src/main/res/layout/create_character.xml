@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@drawable/charactercreator">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/button3"
-        android:onClick="buttonOnClickMenu" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start"
+        android:text="Create"
         android:id="@+id/button2"
         android:layout_gravity="bottom"
-        android:onClick="buttonOnClickLoad" />
-</LinearLayout>
+        android:onClick="buttonOnClickLoad"
+        android:layout_marginBottom="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="188dp"
+        android:layout_height="45dp"
+        android:id="@+id/nameTextField"
+        android:inputType="text"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Spinner
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/nameTextField"
+        android:layout_toStartOf="@+id/nameTextField"
+        android:layout_marginTop="56dp"
+        android:entries="@array/class_array"
+        android:prompt="@string/class_prompt"/>
+
+</RelativeLayout>
