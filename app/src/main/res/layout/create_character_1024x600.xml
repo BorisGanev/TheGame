@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/charactercreator"
+
+    >
+
+    <Spinner
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner"
+        android:layout_marginTop="92dp"
+        android:entries="@array/class_array"
+        android:prompt="@string/class_prompt"
+        android:layout_marginLeft="138dp"
+        android:layout_marginStart="138dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner2"
+        android:layout_marginTop="66dp"
+        android:entries="@array/race_array"
+        android:prompt="@string/race_prompt"
+        android:layout_below="@+id/spinner5"
+        android:layout_alignLeft="@+id/spinner"
+        android:layout_alignStart="@+id/spinner" />
+
+    <TextView
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner3"
+        android:entries="@array/class_array"
+        android:prompt="@string/class_prompt"
+        android:text="male"
+        android:gravity="center"
+        android:layout_below="@+id/spinner2"
+        android:layout_alignLeft="@+id/spinner2"
+        android:layout_alignStart="@+id/spinner2"
+        android:layout_marginTop="70dp"
+        android:enabled="true"
+        android:editable="true"
+        android:clickable="true"
+        android:visibility="visible"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <TextView
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner4"
+        android:entries="@array/class_array"
+        android:prompt="@string/class_prompt"
+        android:text="arthago"
+        android:gravity="center"
+        android:layout_below="@+id/imageView"
+        android:layout_alignLeft="@+id/spinner3"
+        android:layout_alignStart="@+id/spinner3"
+        android:layout_marginTop="60dp"
+        android:enabled="true"
+        android:editable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/button2"
+        android:layout_alignLeft="@+id/spinner4"
+        android:layout_alignStart="@+id/spinner4"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:onClick="buttonOnClickMenu" />
+
+    <TextView
+        android:layout_width="115dp"
+        android:layout_height="30dp"
+        android:id="@+id/spinner5"
+        android:entries="@array/class_array"
+        android:prompt="@string/class_prompt"
+        android:layout_marginRight="117dp"
+        android:text="5"
+        android:gravity="center"
+        android:layout_alignTop="@+id/spinner"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="117dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:id="@+id/button3"
+        android:padding="0dp"
+        android:layout_alignTop="@+id/button2"
+        android:layout_alignLeft="@+id/spinner5"
+        android:layout_alignStart="@+id/spinner5"
+        android:layout_alignRight="@+id/spinner5"
+        android:layout_alignEnd="@+id/spinner5"
+        android:onClick="buttonOnClickLoad" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/spinner2"
+        android:layout_alignLeft="@+id/spinner5"
+        android:layout_alignStart="@+id/spinner5"
+        android:layout_above="@+id/spinner3"
+        android:layout_alignRight="@+id/spinner5"
+        android:layout_alignEnd="@+id/spinner5"
+        android:gravity="center"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"
+        android:id="@+id/textView2"
+        android:layout_alignTop="@+id/spinner3"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_marginTop="-2dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:autoText="false"
+        android:layout_alignBottom="@+id/spinner4"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignStart="@+id/button3"
+        android:layout_alignRight="@+id/button3"
+        android:layout_alignEnd="@+id/button3"
+        android:layout_alignTop="@+id/spinner4"
+        android:text="5"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Name"
+        android:id="@+id/textView4"
+        android:layout_alignTop="@+id/button2"
+        android:layout_toLeftOf="@+id/button3"
+        android:layout_toRightOf="@+id/button2"
+        android:layout_toEndOf="@+id/button2"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:enabled="true"
+        android:editable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/spinner2"
+        android:layout_alignBottom="@+id/spinner3"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_alignEnd="@+id/textView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+</RelativeLayout>

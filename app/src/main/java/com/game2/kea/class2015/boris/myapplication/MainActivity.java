@@ -15,7 +15,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu);
+        setContentView(R.layout.mainmenu_1204x600);
 
     }
 
@@ -47,16 +47,22 @@ public class MainActivity extends ActionBarActivity
 
     public void buttonOnClickLoad(View v) {
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_1024x600);
     }
+
+    public void buttonOnClickFarming(View v) {
+
+        setContentView(R.layout.farming_view_1024x600);
+    }
+
     public void buttonOnClickStart(View v) {
 
-        setContentView(R.layout.create_character);
+        setContentView(R.layout.create_character_1024x600);
     }
 
     public void buttonOnClickMenu(View v) {
 
-        setContentView(R.layout.menu);
+        setContentView(R.layout.mainmenu_1204x600);
     }
 
     public void buttonOnClickExit(View v)
