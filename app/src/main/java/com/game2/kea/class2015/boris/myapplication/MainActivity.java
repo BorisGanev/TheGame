@@ -1,5 +1,6 @@
 package com.game2.kea.class2015.boris.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -56,6 +57,18 @@ public class MainActivity extends ActionBarActivity
     public void buttonOnClickMenu(View v) {
 
         setContentView(R.layout.menu);
+    }
+
+    public void buttonOnClickExit(View v)
+    {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
     }
 
 }
