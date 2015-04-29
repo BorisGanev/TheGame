@@ -6,11 +6,17 @@
 
     <string name="class_prompt">Choose a class.</string>
     <string name="race_prompt">Choose a race.</string>
+    <string name="sex_prompt">Choose a race.</string>
 
     <string-array name="class_array">
         <item>Warrior</item>
         <item>Wizard</item>
         <item>Ranger</item>
+    </string-array>
+
+    <string-array name="sex_array">
+        <item>Nale</item>
+        <item>Female</item>
     </string-array>
 
     <string-array name="race_array">

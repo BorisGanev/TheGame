@@ -4,6 +4,8 @@ package com.game2.kea.class2015.boris.myapplication;
  * Created by oliwer on 16/04/2015.
  */
 
+import android.graphics.drawable.Drawable;
+
 import java.util.ArrayList;
 
 /**
@@ -19,7 +21,7 @@ public class Player
     private String classs;
     private int next_lvl_exp_req;
     private int last_lvl_exp_req;
-   // private ImageIcon img;
+    private Drawable img;
 
     //stats
 
@@ -34,7 +36,7 @@ public class Player
 
     private ArrayList<Item> MyItems = new ArrayList<Item>();
 
-    public Player(String _name, String _race, String _origin, String _classs)//,ImageIcon icon)
+    public Player(String _name, String _race, String _origin, String _classs, Drawable icon)
     {
         this.name = _name;
         this.race = _race;
@@ -48,7 +50,7 @@ public class Player
         this.armor = 5;
         this.experience = 0;
         this.next_lvl_exp_req = 100;
-        //this.img = icon;
+        this.img = icon;
         this.upgrade_points = 0;
     }
 
@@ -147,15 +149,15 @@ public class Player
     }
 
 
-  /*  public ImageIcon getImg()
+    public Drawable getImg()
     {
         return img;
     }
 
-    public void setImg(ImageIcon img)
+    public void setImg(Drawable img)
     {
         this.img = img;
-    }*/
+    }
 
     public int getHealth()
     {
