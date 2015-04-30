@@ -7,17 +7,18 @@
     >
 
     <Spinner
-        android:layout_width="115dp"
+        android:layout_width="240dp"
         android:layout_height="30dp"
         android:id="@+id/spinner_class"
         android:layout_marginTop="92dp"
         android:entries="@array/class_array"
         android:prompt="@string/class_prompt"
-        android:layout_marginLeft="138dp"
+        android:layout_marginLeft="70dp"
         android:layout_marginStart="138dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:gravity="center" />
 
     <Spinner
         android:layout_width="115dp"
@@ -28,7 +29,10 @@
         android:prompt="@string/race_prompt"
         android:layout_below="@+id/textview_str"
         android:layout_alignLeft="@+id/spinner_class"
-        android:layout_alignStart="@+id/spinner_class" />
+        android:layout_alignStart="@+id/spinner_class"
+        android:layout_alignRight="@+id/spinner_class"
+        android:layout_alignEnd="@+id/spinner_class"
+        android:gravity="center" />
 
     <Spinner
         android:layout_width="115dp"
@@ -39,7 +43,10 @@
         android:layout_below="@+id/spinner_race"
         android:layout_alignLeft="@+id/spinner_race"
         android:layout_alignStart="@+id/spinner_race"
-        android:layout_marginTop="70dp" />
+        android:layout_marginTop="70dp"
+        android:layout_alignRight="@+id/spinner_race"
+        android:layout_alignEnd="@+id/spinner_race"
+        android:gravity="center" />
 
     <TextView
         android:layout_width="115dp"
@@ -55,24 +62,26 @@
         android:editable="true"
         android:clickable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:layout_alignRight="@+id/spinner_sex"
+        android:layout_alignEnd="@+id/spinner_sex" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
         android:id="@+id/button_back"
-        android:layout_alignLeft="@+id/textview_origin"
-        android:layout_alignStart="@+id/textview_origin"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
-        android:onClick="buttonOnClickMenu" />
+        android:onClick="buttonOnClickMenu"
+        android:background="@drawable/back_button"
+        android:layout_alignRight="@+id/textview_origin"
+        android:layout_alignEnd="@+id/textview_origin" />
 
     <TextView
-        android:layout_width="115dp"
+        android:layout_width="230dp"
         android:layout_height="30dp"
         android:id="@+id/textview_str"
-        android:layout_marginRight="117dp"
+        android:layout_marginRight="90dp"
         android:text="5"
         android:gravity="center"
         android:layout_alignTop="@+id/spinner_class"
@@ -83,15 +92,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create"
         android:id="@+id/button_create"
         android:padding="0dp"
         android:layout_alignTop="@+id/button_back"
         android:layout_alignLeft="@+id/textview_str"
         android:layout_alignStart="@+id/textview_str"
-        android:layout_alignRight="@+id/textview_str"
-        android:layout_alignEnd="@+id/textview_str"
-        android:onClick="buttonOnClickCreateandLoad" />
+        android:onClick="buttonOnClickCreateandLoad"
+        android:background="@drawable/create_button"
+        android:layout_alignBottom="@+id/textView_name" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -165,8 +173,9 @@
         android:layout_alignEnd="@+id/textView_name"
         android:layout_alignLeft="@+id/textView_name"
         android:layout_alignStart="@+id/textView_name"
-        android:layout_marginLeft="200dp"
-        android:layout_marginRight="180dp"
-        android:layout_alignTop="@+id/spinner_race" />
+        android:layout_alignTop="@+id/spinner_race"
+        android:background="@drawable/char_1"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp" />
 
 </RelativeLayout>

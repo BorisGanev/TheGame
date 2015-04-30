@@ -5,4 +5,8 @@
         <!-- Customize your theme here. -->
     </style>
 
+
+    <color name="transparent_orange">#a0000000</color>
+
+
 </resources>

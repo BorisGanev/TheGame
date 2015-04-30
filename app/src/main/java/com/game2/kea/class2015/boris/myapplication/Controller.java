@@ -109,6 +109,8 @@ public class Controller {
 
         } while (farming);
 
+
+
     }
 
     //Updates GUI-elements on the Farming-View

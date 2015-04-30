@@ -1,7 +1,11 @@
 package com.game2.kea.class2015.boris.myapplication;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,10 +16,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity
@@ -23,13 +29,23 @@ public class MainActivity extends ActionBarActivity
 
     protected Controller control;
 
+    protected void onDraw()
+    {
+
+        Canvas c = new Canvas();
+        Paint p=new Paint();
+        Bitmap b= BitmapFactory.decodeResource(getResources(), R.drawable.bear);
+        p.setColor(Color.RED);
+        c.drawBitmap(b, 0, 0, p);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         control = new Controller(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainmenu_1204x600);
 
+       setContentView(R.layout.mainmenu_1204x600);
     }
 
     //Auto-generated
@@ -38,6 +54,7 @@ public class MainActivity extends ActionBarActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        onDraw();
         return true;
     }
 
@@ -131,11 +148,20 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     //BUTTON LISTENERS HEAR
     //----------------------------------------------------------------------------
 
-    // Load the last save
-    public void buttonOnClickLoad(View v) {
+    //Set layout to Town
+    public void buttonOnClickBackToTown(View v)
+    {
+        setContentView(R.layout.activity_main_1024x600);
+    }
+
+        // Load the last save
+    public void buttonOnClickLoad(View v)
+    {
 
         setContentView(R.layout.activity_main_1024x600);
     }
@@ -156,7 +182,8 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main_1024x600);
     }
     // OPen farming view
-    public void buttonOnClickFarming(View v) {
+    public void buttonOnClickFarming(View v)
+    {
 
         setContentView(R.layout.farming_view_1024x600);
     }
@@ -204,31 +231,66 @@ public class MainActivity extends ActionBarActivity
     }
 
     //Back to Main-menu listener
-    public void buttonOnClickMenu(View v) {
+    public void buttonOnClickMenu(View v)
+    {
 
         setContentView(R.layout.mainmenu_1204x600);
     }
 
+    //Goes to Invetory View
+    public void buttonOnClickInventory(View v)
+    {
+
+        setContentView(R.layout.inventorylayout_1024x600);
+
+        GridView gridview = (GridView) findViewById(R.id.gridView);
+        gridview.setAdapter(new ImageAdapter(this));
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, "" + position,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     // listener for the Start farming button
-    public void buttonOnClickFarmingStart(View v) {
+    public void buttonOnClickFarmingStart(View v)
+    {
 
         Button btnNewButton = (Button)findViewById(R.id.button_Start);
+
 
         if (btnNewButton.getText() == "Stop")
         {
             btnNewButton.setText("Start");
-           this.onPausee();
+            Drawable new_image= getResources().getDrawable(R.drawable.start_farming_button);
+            btnNewButton.setBackgroundDrawable(new_image);
 
+                control.farming = false;
         } else
         {
             btnNewButton.setText("Stop");
-            if (queryThread.isAlive())
-               this.onResumee();
-            else
+            Drawable new_image= getResources().getDrawable(R.drawable.stop_farming_button);
+            btnNewButton.setBackgroundDrawable(new_image);
+           Thread queryThread = new Thread()
+        {
+            public void run()
             {
-                queryThread.start();
+                if (control.farming) {
+                    control.farming = false;
+
+                } else {
+                    control.farming = true;
+                    control.Farming();
+                }
             }
+
+        };
+            queryThread.start();
         }
     }
 
@@ -246,47 +308,5 @@ public class MainActivity extends ActionBarActivity
     }
     //----------------------------------------------------------------------------
 
-    //farming thread
 
-    public Thread queryThread = new Thread()
-    {
-        public void run()
-        {
-            if (control.farming) {
-                control.farming = false;
-
-            } else {
-                control.farming = true;
-                control.Farming();
-            }
-
-            synchronized (mPauseLock) {
-                while (mPaused) {
-                    try {
-                        mPauseLock.wait();
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        }
-
-    };
-
-
-    // for stop and resume the farming thread
-    public Object mPauseLock = new Object();
-    private boolean mPaused= false;
-
-    public void onPausee() {
-        synchronized (mPauseLock) {
-            mPaused = true;
-        }
-    }
-
-    public void onResumee() {
-        synchronized (mPauseLock) {
-            mPaused = false;
-            mPauseLock.notifyAll();
-        }
-    }
 }
