@@ -57,4 +57,18 @@
         android:columnWidth="50dp"
         android:verticalSpacing="8dp" />
 
+    <ImageView
+        android:layout_width="145dp"
+        android:layout_height="145dp"
+        android:id="@+id/imageView_Inv_Item"
+        android:layout_x="492dp"
+        android:layout_y="88dp" />
+
+    <TextView
+        android:layout_width="162dp"
+        android:layout_height="141dp"
+        android:id="@+id/textView_InvDescr"
+        android:layout_x="740dp"
+        android:layout_y="115dp" />
+
 </AbsoluteLayout>

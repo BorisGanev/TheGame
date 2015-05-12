@@ -7,19 +7,25 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by oliwer on 30/04/2015.
  */
 public class ImageAdapter  extends BaseAdapter {
 
         private Context mContext;
+        public ArrayList<Item> list;
 
-        public ImageAdapter(Context c) {
+        public ImageAdapter(Context c,ArrayList<Item> list)
+        {
             mContext = c;
+            this.list = list;
         }
 
-        public int getCount() {
-            return mThumbIds.length;
+        public int getCount()
+        {
+            return list.size();
         }
 
         public Object getItem(int position) {
@@ -27,16 +33,20 @@ public class ImageAdapter  extends BaseAdapter {
         }
 
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
             ImageView imageView;
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(55, 55));
+
+
+                imageView.setLayoutParams(new GridView.LayoutParams(50, 50));
+
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
@@ -45,30 +55,11 @@ public class ImageAdapter  extends BaseAdapter {
                 imageView = (ImageView) convertView;
             }
 
-            imageView.setImageResource(mThumbIds[position]);
+
+             imageView.setImageResource(list.get(position).getImg());
+
             return imageView;
         }
 
-        // references to our images
-        private Integer[] mThumbIds = {
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.tiger,
-                R.drawable.bear, R.drawable.wolf,
-                R.drawable.bear,
-        };
     }
 

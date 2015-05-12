@@ -5,12 +5,14 @@ package com.game2.kea.class2015.boris.myapplication;
  */
 
 
+import java.io.Serializable;
+
 /**
  * Created by oliwer on 23/03/2015.
  */
-public class Item
+public class Item implements Serializable
 {
-
+    private static final long serialVersionUID = 0L;
     private String name;
     private String race;
     private int buy_price;
@@ -18,28 +20,30 @@ public class Item
     private String classs;
     private int level;
     private String description;
-  //  private BufferedImage img;
+    private int img;
     private Boolean isEquipped;
+    private Boolean owned;
     // stats
     private int str;
     private int armor;
     private int hp;
 
     public Item(String _name, String _classs, String _description, int _str,
-                int _hp, int _armor, int _price)//, BufferedImage _img)
+                int _hp, int _armor, int _price,int _img,int lvl)
     {
         this.name = _name;
         this.race = "race";
         this.buy_price = _price;
         this.classs = _classs;
-        this.level = 1;
+        this.level = lvl;
         this.str = _str;
         this.hp = _hp;
         this.armor = _armor;
         this.sell_price = this.buy_price / 2;
         this.description = _description;
-       // this.img = _img;
+        this.img = _img;
         this.isEquipped = false;
+        this.owned = false;
     }
 
     public String getName()
@@ -102,15 +106,15 @@ public class Item
         this.str = str;
     }
 
-  /*  public BufferedImage getImg()
+    public int getImg()
     {
         return img;
     }
 
-    public void setImg(BufferedImage img)
+    public void setImg(int img)
     {
         this.img = img;
-    }*/
+    }
 
     public int getArmor()
     {
@@ -141,6 +145,17 @@ public class Item
     {
         this.isEquipped = isEquipped;
     }
+
+    public Boolean getOwned()
+    {
+        return owned;
+    }
+
+    public void setOwned(Boolean owned)
+    {
+        this.owned = owned;
+    }
+
 
 }
 

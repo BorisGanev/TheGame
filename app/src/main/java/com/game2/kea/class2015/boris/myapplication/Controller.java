@@ -4,8 +4,14 @@ package com.game2.kea.class2015.boris.myapplication;
  * Created by oliwer on 16/04/2015.
  */
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,13 +19,15 @@ import java.util.Random;
 
 public class Controller {
 
-    private static Player player;
-    private static ArrayList<Item> Items = new ArrayList<Item>();
-    private static ArrayList<Item> PlayerItems = new ArrayList<Item>();
-    public static boolean farming = false;
-    private static Drawable img = null;
-    // public static DefaultListModel<Object> model;
-    // public static DefaultListModel<Object> Playermodel;
+    public Player player;
+
+    // public ArrayList<Item> Items = new ArrayList<Item>();
+    //public ArrayList<Item> PlayerItems = new ArrayList<Item>();
+
+    public boolean farming = false;
+    // public boolean success = false; //for checking if the purchase was successful or not
+    public int selectedItemId;
+
     private String plyrstr = "";
     private String plyrstraftr = "";
     private String mobhp = "";
@@ -28,20 +36,28 @@ public class Controller {
     private String mobname = "";
     private String mobarmor = "";
     private String mobmaxhp = "";
+    private Boolean refresh = false;
+    private Mob monster;
+
+    private static Random rand = new Random();
 
     protected MainActivity context;
+    public QuestController qc;
+    public ItemController ic;
 
     // Constructor
     public Controller(MainActivity context) {
         this.context = context;
+        this.qc = new QuestController();
+        this.ic = new ItemController();
+        ic.generateXitems(10, context);
+        qc.generateQuests();
     }
 
-    // Damage after reduction calculator
-    private static int dmgtaken(int armor, int hp, int str) {
-        double s = str;
-        double ar = armor;
-        double dmg = s - (s * (ar / 100));
-        return hp - (int) dmg;
+    //Create new Player
+    public void createPlayer(String name, String race, String classs, String origin, Drawable icon) {
+        player = new Player(name, race, origin, classs, icon);
+
     }
 
     //Farming
@@ -51,9 +67,6 @@ public class Controller {
 
         String[] names = {"wolf", "tiger", "bear"};
         Random r = new Random();
-
-        Mob monster;
-
 
         do {
             monster = new Mob(names[r.nextInt(3)], "monster",
@@ -69,6 +82,7 @@ public class Controller {
             plyrstraftr = Integer.toString((monster.getHp() - dmgtaken(monster.getArmor(), monster.getHp(), player.getStr())));
             mobmaxhp = Integer.toString(monster.getHp());
             mobhp = mobmaxhp;
+            refresh = false;
             update();
 
             do {
@@ -105,208 +119,262 @@ public class Controller {
             plyrgold = Integer.toString(player.getGold());
             plyrlvl = Integer.toString(player.getLevel());
 
+            refresh = true;
+            UQP();
             update();
 
         } while (farming);
 
 
+    }
 
+    // Damage after reduction calculator
+    private static int dmgtaken(int armor, int hp, int str) {
+        double s = str;
+        double ar = armor;
+        double dmg = s - (s * (ar / 100));
+        return hp - (int) dmg;
     }
 
     //Updates GUI-elements on the Farming-View
-    public void update()
+    public void update() {
+        context.Kappa(plyrstr, mobname, mobarmor, plyrstraftr, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl, mobmaxhp, mobhp, refresh);
+    }
+
+
+    //QUEST-------------------------------------------------------------------------
+
+    public void UQP() {
+        this.player = qc.updateQuestsProgress(player, monster);
+    }
+
+    public void takereward() {
+        this.player = qc.TakeReward(selectedItemId, player);
+    }
+
+    public void acceptquest() {
+        this.player = qc.AddQuestToPlayer(selectedItemId, player, context);
+    }
+
+    public String getQuestDescription() {
+        return qc.getQuestDescr(selectedItemId);
+    }
+
+    public String getPlayerQuestDescription() {
+        return qc.getPlayerQuestDescr(selectedItemId);
+    }
+
+    public void showQuestProgress() {
+        this.player = qc.ShowQuestProgress(context, player);
+    }
+
+    public ArrayList<Quest> subArrayList(String status) {
+        return qc.subArray(status);
+    }
+
+
+    //ITEMS-----------------------------------------------------------------------------
+
+    public void Equip_Unequip_Item() {
+        this.player = ic.Equip_Unequip(player, selectedItemId, context);
+    }
+
+    public String ShopItemDescription() {
+        return ic.Descript_Item(selectedItemId);
+    }
+
+    public String PlayerItemDescription() {
+        return ic.Descript_PlayerItem(selectedItemId);
+    }
+
+    public void AddItemToPlayer() {
+        this.player = ic.AddItemtoPlayer(player, selectedItemId);
+    }
+
+    public void Drop_Item() {
+        this.player = ic.DropItem(player, selectedItemId);
+    }
+
+    public void Buy() {
+        this.player = ic.buy(player, selectedItemId, context);
+    }
+
+    public void Sell() {
+        this.player = ic.sell(player, selectedItemId);
+    }
+
+    //Saving and Loading -----------------------------------------------------
+
+
+    public void Save()
     {
-        context.Kappa(plyrstr, mobname, mobarmor, plyrstraftr, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl,mobmaxhp,mobhp);
-    }
+        ArrayList<Item> allItems = ic.Items;
+        ArrayList<Quest> allQuests = qc.Quests;
 
-    //Create new Player
-    public static void createPlayer(String name, String race, String classs, String origin, Drawable icon) {
-        player = new Player(name, race, origin, classs, icon);
-    }
+        String filename;
+        FileOutputStream fos;
 
-    //Add new item to the List (Shop is using this list)
-    private static void AddNewItem(Item item) {
-        Items.add(item);
-        //updateAllItemList();
-    }
+        try {
 
-    // Add Item to the player (Shop - buy button)
-    public static void AddItemtoPlayer(int index) {
-        PlayerItems.add(Items.get(index));
-        RefreshPlayerItems();
-    }
+            filename = "Saved_Items.xml";
+            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-    //Create new Item
-    public static void generateItem(String name, String classs, String description, int str, int hp, int armor, int price)//,	BufferedImage img)
-    {
-        AddNewItem(new Item(name, classs, description, str, hp, armor, price));///, img));
-    }
+            oos.writeObject(allItems);
+            oos.close();
 
-    //Drop Item from the Player's inventory
-    public static void DropItem(int i) {
-        PlayerItems.remove(i);
-        RefreshPlayerItems();
-    }
+            filename = "Saved_Quests.xml";
+            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            oos = new ObjectOutputStream(fos);
 
-    //Checks if the Item is equipped by the player
-    public static Boolean isEquipped(int i) {
-        return PlayerItems.get(i).getIsEquipped();
-    }
+            oos.writeObject(allQuests);
+            oos.close();
 
-    //Get Item from the list
-    public static Item getItem(int index) {
-        return Items.get(index);
-    }
+            filename = "Saved_Player.xml";
+            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            oos = new ObjectOutputStream(fos);
 
-    //Equipe / Unequipe item
-    public static void Equipe_Unequipe(int i) {
-        if (PlayerItems.get(i).getIsEquipped()) {
-            player.Unequip_item(i);
-            PlayerItems.get(i).setIsEquipped(false);
-
-        } else {
-            player.Equip_item(i);
-            PlayerItems.get(i).setIsEquipped(true);
-        }
-        RefreshPlayerItems();
-    }
-
-    //Return a description for the Item
-    public static String Descript(int i) {
-        return new String("armor: " + Items.get(i).getArmor() + "\n" + "Str: "
-                + Items.get(i).getStr() + "\n" + "sell price: "
-                + Items.get(i).getSell_price() + "\n" + "description: "
-                + Items.get(i).getDescription());
-    }
-
-    //Refreshes playerItems list
-    private static void RefreshPlayerItems() {
-        player.setMyItems(PlayerItems);
-        PlayerItems = player.getMyItems();
-       // updatePlayerItemList();
-    }
+            oos.writeObject(player);
+            oos.close();
 
 
-    private static Random rand = new Random();
-
-
-    /*
-    Not yet? needed code
-
-    public static void updateAllItemList() {
-        model = new DefaultListModel<Object>();
-        for (int i = 0; i < Items.size(); i++)
-        {
-            model.addElement(Items.get(i).getName() + " "+ Items.get(i).getBuy_price());
-        }
-
-    }
-
-    public static void updatePlayerItemList() {
-       /* Playermodel = new DefaultListModel<Object>();
-        for (int i = 0; i < player.getMyItems().size(); i++)
-        {
-            Playermodel.addElement(player.getMyItems().get(i).getName() + " "
-                    + player.getMyItems().get(i).getBuy_price());
-        }
-
-    }
-
-    public static void Addhardcodedvalues() {
-        Items = new ArrayList<Item>();
-
-        BufferedImage imm;
-        try
-        {
-            imm = ImageIO.read(new File("Images//sword_1.png"));
-            generateItem("Sword of smthing", "Warrior",
-                    "Your first sword", 5, 0, 1, rand.nextInt(550), imm);
-
-            imm = ImageIO.read(new File("Images//armor_1.png"));
-            generateItem("Cape of smthing", "Warrior",
-                    "Your first cape", 0, 20, 5, rand.nextInt(550), imm);
-
-            imm = ImageIO.read(new File("Images//boots_1.png"));
-            generateItem("Boots of smthing", "Warrior",
-                    "Your first Boots", 0, 0, 3, rand.nextInt(550), imm);
-
-            imm = ImageIO.read(new File("Images//helmet_1.png"));
-            generateItem("Helmet of smthing", "Warrior",
-                    "Your first helmet", 0, 0, 2, rand.nextInt(550), imm);
-
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-   /* public static Drawable itempic(int i)
+    public void DataForNewGame()
     {
-        return new Drawable(Items.get(i).getImg());
-    }*/
+        String filename;
+        FileInputStream fos;
 
+        try {
 
+            filename = "Items.xml";
+            fos = context.openFileInput(filename);
+            ObjectInputStream oos = new ObjectInputStream(fos);
 
-/*
-    public static void setStatValues() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run()
-            {
-                String upp = Integer.toString(player.getUpgrade_points());
-                MainActivity.lblUpValue.setText(upp);
-                String name = player.getName();
-                MainActivity.lblNameValue.setText(name);
-                MainActivity.lblStrValue.setText(Integer.toString(player.getStr()));
-                MainActivity.lblArmorValue.setText(Integer.toString(player.getArmor()));
-                MainActivity.lblHpValue.setText(Integer.toString(player.getHealth()));
+            ic.Items = (ArrayList<Item>) oos.readObject();
+            oos.close();
 
-                if(player.getUpgrade_points() == 0)
-                {
-                    MainActivity.btnArmorMinus.setEnabled(false);
-                    MainActivity.btnHpMinus.setEnabled(false);
-                    MainActivity.btnStrMinus.setEnabled(false);
-                    MainActivity.btnArmorPlus.setEnabled(false);
-                    MainActivity.btnHpPlus.setEnabled(false);
-                    MainActivity.btnStrPlus.setEnabled(false);
-                }
-                else
-                {
-                    //	MainActivity.btnArmorMinus.setEnabled(true);
-                    //	MainActivity.btnHpMinus.setEnabled(true);
-                    //	MainActivity.btnStrMinus.setEnabled(true);
-                    MainActivity.btnArmorPlus.setEnabled(true);
-                    MainActivity.btnHpPlus.setEnabled(true);
-                    MainActivity.btnStrPlus.setEnabled(true);
-                }
-            }});
+            filename = "Quests.xml";
+            fos = context.openFileInput(filename);
+            oos = new ObjectInputStream(fos);
 
+            qc.Quests = (ArrayList<Quest>) oos.readObject();
+            oos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void statChange(String stat, int i, String text) {
-        switch (stat) {
-            case "Hp":
-                player.setHealth(player.getHealth() + i);
-                break;
-            case "Str":
-                player.setStr(player.getStr() + i);
-                break;
-            case "Armor":
-                player.setArmor(player.getArmor() + i);
-                break;
+    public void Load()
+    {
+        String filename;
+        FileInputStream fos;
+
+        try {
+
+            filename = "Saved_Items.xml";
+            fos = context.openFileInput(filename);
+            ObjectInputStream oos = new ObjectInputStream(fos);
+
+            ic.Items = (ArrayList<Item>) oos.readObject();
+            oos.close();
+
+            filename = "Saved_Quests.xml";
+            fos = context.openFileInput(filename);
+            oos = new ObjectInputStream(fos);
+
+            qc.Quests = (ArrayList<Quest>) oos.readObject();
+            oos.close();
+
+            filename = "Saved_Player.xml";
+            fos = context.openFileInput(filename);
+            oos = new ObjectInputStream(fos);
+
+            player = (Player) oos.readObject();
+            oos.close();
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        switch (text) {
-            case "plus":
-                player.setUpgrade_points(player.getUpgrade_points() - 1);
-                break;
-            case "minus":
-                player.setUpgrade_points(player.getUpgrade_points() + 1);
-                break;
+        setPlayerLists();
+    }
 
-        }
+    private void setPlayerLists()
+    {
+        ic.PlayerItems = player.getMyItems();
+        qc.PlayerQuests = player.getMyQuests();
+    }
 
-
-    }*/
+    // GETTERS and SETTERS -----------------------------------------------------------------------
 
 
+    //Checks if the Item is equipped by the player
+    public  Boolean isEquipped() {
+        return ic.PlayerItems.get(selectedItemId).getIsEquipped();
+    }
+
+    //Returns the player's gold
+    public  int getGold()
+    {
+        return player.getGold();
+    }
+
+    //Returns the player's gold
+    public  String getName()
+    {
+        return player.getName();
+    }
+
+    //Returns the player's gold
+    public  int getUP()
+    {
+        return player.getUpgrade_points();
+    }
+
+    public  void setUP()
+    {
+        player.setUpgrade_points(player.getUpgrade_points() - 1);
+    }
+
+    //Returns the player's gold
+    public  int getArmor()
+    {
+        return player.getArmor();
+    }
+
+    public  void setArmor()
+    {
+        player.setArmor(player.getArmor() + 1);
+    }
+
+    //Returns the player's gold
+    public  int getStr()
+    {
+        return player.getStr();
+    }
+
+    public  void setStr()
+    {
+        player.setStr(player.getStr() + 1);
+    }
+
+    //Returns the player's gold
+    public  int getHP()
+    {
+        return player.getHealth();
+    }
+
+    public  void setHP()
+    {
+        player.setHealth(player.getHealth() + 10);
+    }
+
+    //-----------------------------------------------------------------------------------------
 }

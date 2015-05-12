@@ -4,7 +4,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@drawable/charactercreator"
 
-    >
+   >
 
     <Spinner
         android:layout_width="240dp"
@@ -43,10 +43,9 @@
         android:layout_below="@+id/spinner_race"
         android:layout_alignLeft="@+id/spinner_race"
         android:layout_alignStart="@+id/spinner_race"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="65dp"
         android:layout_alignRight="@+id/spinner_race"
-        android:layout_alignEnd="@+id/spinner_race"
-        android:gravity="center" />
+        android:layout_alignEnd="@+id/spinner_race" />
 
     <TextView
         android:layout_width="115dp"
@@ -57,14 +56,15 @@
         android:layout_below="@+id/imageView_create"
         android:layout_alignLeft="@+id/spinner_sex"
         android:layout_alignStart="@+id/spinner_sex"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="65dp"
         android:enabled="true"
         android:editable="true"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:layout_alignRight="@+id/spinner_sex"
-        android:layout_alignEnd="@+id/spinner_sex" />
+        android:layout_alignEnd="@+id/spinner_sex"
+        android:layout_marginRight="15dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -74,14 +74,14 @@
         android:layout_marginBottom="20dp"
         android:onClick="buttonOnClickMenu"
         android:background="@drawable/back_button"
-        android:layout_alignRight="@+id/textview_origin"
+        android:layout_alignRight="@+id/spinner_sex"
         android:layout_alignEnd="@+id/textview_origin" />
 
     <TextView
-        android:layout_width="230dp"
+        android:layout_width="283dp"
         android:layout_height="30dp"
         android:id="@+id/textview_str"
-        android:layout_marginRight="90dp"
+        android:layout_marginRight="37dp"
         android:text="5"
         android:gravity="center"
         android:layout_alignTop="@+id/spinner_class"
@@ -110,10 +110,10 @@
         android:layout_alignLeft="@+id/textview_str"
         android:layout_alignStart="@+id/textview_str"
         android:layout_above="@+id/spinner_sex"
-        android:layout_alignRight="@+id/textview_str"
-        android:layout_alignEnd="@+id/textview_str"
         android:gravity="center"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="2dp"
+        android:layout_alignRight="@+id/textView_stamina"
+        android:layout_alignEnd="@+id/textView_stamina" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -121,13 +121,13 @@
         android:text="5"
         android:id="@+id/textView_int"
         android:layout_alignTop="@+id/spinner_sex"
-        android:layout_alignRight="@+id/textView_agility"
-        android:layout_alignEnd="@+id/textView_agility"
         android:layout_alignLeft="@+id/textView_agility"
         android:layout_alignStart="@+id/textView_agility"
         android:gravity="center"
         android:layout_alignBottom="@+id/imageView_create"
-        android:layout_marginTop="-2dp" />
+        android:layout_marginTop="-2dp"
+        android:layout_alignRight="@+id/textView_stamina"
+        android:layout_alignEnd="@+id/textView_stamina" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -141,7 +141,8 @@
         android:layout_alignEnd="@+id/button_create"
         android:layout_alignTop="@+id/textview_origin"
         android:text="5"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginTop="0dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -173,9 +174,9 @@
         android:layout_alignEnd="@+id/textView_name"
         android:layout_alignLeft="@+id/textView_name"
         android:layout_alignStart="@+id/textView_name"
-        android:layout_alignTop="@+id/spinner_race"
         android:background="@drawable/char_1"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp" />
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_below="@+id/spinner_class" />
 
 </RelativeLayout>

@@ -35,6 +35,8 @@ public class Player
     private int health;
 
     private ArrayList<Item> MyItems = new ArrayList<Item>();
+    private ArrayList<Quest> MyQuests = new ArrayList<Quest>();
+
 
     public Player(String _name, String _race, String _origin, String _classs, Drawable icon)
     {
@@ -174,6 +176,24 @@ public class Player
         return armor;
     }
 
+
+    public ArrayList<Quest> getMyQuests()
+    {
+        return MyQuests;
+    }
+
+    public void setMyQuests(ArrayList<Quest> q)
+    {
+        this.MyQuests = q;
+    }
+
+    public void addNewQuest(Quest quest)
+    {
+        this.MyQuests.add(quest);
+    }
+
+
+
     public ArrayList<Item> getMyItems()
     {
         return MyItems;
@@ -183,6 +203,12 @@ public class Player
     {
         this.MyItems = myItems;
     }
+
+    public void addNewItem(Item item)
+    {
+        this.MyItems.add(item);
+    }
+
     public void Equip_item(int i)
     {
         if(!this.MyItems.get(i).getIsEquipped())
@@ -203,4 +229,18 @@ public class Player
         }
     }
 
+
+
+    //Reward(xp, lvl, item, gold, str, armor, hp)
+    public void CollectReward(Rewards reward)
+    {
+        this.gold += reward.getGold();
+        this.experience += reward.getXp();
+        this.level += reward.getLvl();
+        this.str += reward.getStr();
+        this.armor += reward.getArmor();
+        this.health += reward.getHp();
+        addNewItem(reward.getItem());
+
+    }
 }

@@ -11,14 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_quest"
-        android:onClick="buttonOnClickFarming"
+        android:onClick="buttonOnClickQuests"
         android:paddingLeft="-10dp"
         android:layout_alignWithParentIfMissing="false"
         android:layout_marginTop="74dp"
         android:layout_below="@+id/button_setings"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/quest_button" />
+        android:background="@drawable/quest_button"
+        android:layout_marginLeft="15dp" />
 
     <Button
         android:layout_width="55dp"
@@ -34,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
-        android:onClick="buttonOnClickMenu"
+        android:onClick="buttonOnClickShop"
         android:paddingLeft="-10dp"
         android:layout_alignWithParentIfMissing="false"
         android:layout_centerVertical="true"
@@ -46,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button4"
-        android:onClick="buttonOnClickMenu"
+        android:onClick="buttonOnClickFarming"
         android:paddingLeft="-10dp"
         android:layout_alignWithParentIfMissing="false"
         android:layout_marginTop="49dp"
@@ -62,22 +63,22 @@
         android:onClick="buttonOnClickMenu"
         android:paddingLeft="-10dp"
         android:layout_alignWithParentIfMissing="false"
+        android:background="@drawable/back_button"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/button4"
-        android:layout_alignEnd="@+id/button4"
-        android:background="@drawable/back_button" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button6"
-        android:onClick="buttonOnClickMenu"
+        android:onClick="buttonOnClickStats"
         android:paddingLeft="-10dp"
         android:layout_alignWithParentIfMissing="false"
         android:layout_alignTop="@+id/button_quest"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/stats_button" />
+        android:background="@drawable/stats_button"
+        android:layout_marginRight="15dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -89,7 +90,8 @@
         android:layout_alignBottom="@+id/button"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/inventory_button" />
+        android:background="@drawable/inventory_button"
+        android:layout_marginRight="15dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -101,7 +103,8 @@
         android:layout_alignBottom="@+id/button4"
         android:layout_alignRight="@+id/button_setings"
         android:layout_alignEnd="@+id/button_setings"
-        android:background="@drawable/map_button" />
+        android:background="@drawable/map_button"
+        android:layout_marginRight="15dp" />
 
     <Button
         android:layout_width="90dp"
