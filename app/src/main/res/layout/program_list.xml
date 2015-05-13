@@ -23,7 +23,7 @@
         android:layout_alignEnd="@+id/imageView1"
         android:layout_alignBottom="@+id/imageView1"
         android:layout_alignTop="@+id/imageView1"
-        android:textColor="#ff00ff0a"
+        android:textColor="#fffffff0"
         android:gravity="center"
         android:text="asdasdas" />
 

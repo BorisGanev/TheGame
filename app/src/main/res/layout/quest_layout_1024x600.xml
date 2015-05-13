@@ -34,8 +34,8 @@
         android:layout_above="@+id/button_Back_Quest"
         android:numColumns="1"
         android:verticalSpacing="10dp"
-        android:layout_marginRight="440dp"
-        android:layout_marginLeft="150dp"
+        android:layout_marginRight="480dp"
+        android:layout_marginLeft="110dp"
         android:smoothScrollbar="false" />
 
     <TextView

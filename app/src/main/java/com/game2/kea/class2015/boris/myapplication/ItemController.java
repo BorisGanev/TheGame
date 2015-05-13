@@ -31,21 +31,20 @@ public class ItemController {
     //Equip / Unequip item
     public  Player Equip_Unequip(Player player,int selectedItemId,MainActivity context)
     {
-        if(player.getLevel()>=PlayerItems.get(selectedItemId).getLevel())
-        {
-            if (PlayerItems.get(selectedItemId).getIsEquipped()) {
-                player.Unequip_item(selectedItemId);
-                PlayerItems.get(selectedItemId).setIsEquipped(false);
+        if(player.getMyItems().size()!= 0) {
+            if (player.getLevel() >= PlayerItems.get(selectedItemId).getLevel()) {
+                if (PlayerItems.get(selectedItemId).getIsEquipped()) {
+                    player.Unequip_item(selectedItemId);
+                    PlayerItems.get(selectedItemId).setIsEquipped(false);
 
+                } else {
+                    player.Equip_item(selectedItemId);
+                    PlayerItems.get(selectedItemId).setIsEquipped(true);
+                }
+                RefreshPlayerItems(player);
             } else {
-                player.Equip_item(selectedItemId);
-                PlayerItems.get(selectedItemId).setIsEquipped(true);
+                Toast.makeText(context, "You can't use this Item.", Toast.LENGTH_SHORT).show();
             }
-            RefreshPlayerItems(player);
-        }
-        else
-        {
-            Toast.makeText(context, "You can't use this Item.", Toast.LENGTH_SHORT).show();
         }
 
         return player;
@@ -94,9 +93,11 @@ public class ItemController {
     //Drop Item from the Player's inventory
     public  Player DropItem(Player player, int selectedItemId)
     {
-        Items.get(selectedItemId).setOwned(false);
-        Items.add(PlayerItems.get(selectedItemId));
-        PlayerItems.remove(selectedItemId);
+        if(player.getMyItems().size()!= 0) {
+            Items.get(selectedItemId).setOwned(false);
+            Items.add(PlayerItems.get(selectedItemId));
+            PlayerItems.remove(selectedItemId);
+        }
         return RefreshPlayerItems(player);
     }
 

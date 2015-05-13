@@ -1,9 +1,11 @@
 package com.game2.kea.class2015.boris.myapplication;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -32,18 +34,50 @@ public class MainActivity extends ActionBarActivity
     {
         control = new Controller(this);
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
        setContentView(R.layout.mainmenu_1204x600);
+        Sound("title");
 
+    }
+
+    private MediaPlayer mediaPlayerMusic;
+    private MediaPlayer mediaPlayerEffect;
+    private String menu="title";
+
+    private void clicksound()
+    {
+        mediaPlayerEffect = MediaPlayer.create(getApplicationContext(), R.raw.click);
+        mediaPlayerEffect.start(); // no need to call prepare(); create() does that for you
+    }
+
+    private void Sound(String location)
+    {
+        if(location.equalsIgnoreCase("town")) {
+            mediaPlayerMusic = MediaPlayer.create(getApplicationContext(), R.raw.townmusic);
+            mediaPlayerMusic.start(); // no need to call prepare(); create() does that for you
+        }
+        if(location.equalsIgnoreCase("title")) {
+            mediaPlayerMusic = MediaPlayer.create(getApplicationContext(), R.raw.titlemusic);
+            mediaPlayerMusic.start(); // no need to call prepare(); create() does that for you
+        }
+    }
+
+    private void stopmusic()
+    {
+        mediaPlayerMusic.stop(); // no need to call prepare(); create() does that for you
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
+        Sound(menu);
         try {
             control.Load();
+
         }catch(Exception e){}
+
     }
 
     @Override
@@ -51,6 +85,23 @@ public class MainActivity extends ActionBarActivity
     {
         super.onPause();
         control.Save();
+        stopmusic();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        control.Save();
+        stopmusic();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        control.Save();
+        stopmusic();
     }
 
     //Auto-generated
@@ -75,6 +126,7 @@ public class MainActivity extends ActionBarActivity
 
                 Drawable new_image= getResources().getDrawable( R.drawable.start_farming_button);
                 btnNewButton.setBackgroundDrawable(new_image);
+                btnNewButton.setEnabled(true);
 
                 Drawable backgr = getResources().getDrawable( R.drawable.back_button);
                 back.setBackgroundDrawable(backgr);
@@ -86,7 +138,7 @@ public class MainActivity extends ActionBarActivity
         });
     }
     //Helper for the GUI refresh at Farming View
-    public void Kappa(final String mobstr, final String mobarmor,
+    public void Kappa(final String mobstr, final String mobarmor,final String playerarmor,
                       final String plyrstraftr,final String mobname, final int img, final int next_lvl_exp_req,
                       final int experience, final String plyrgold, final String plyrlvl,final String mobmaxhp,
                       final String mobhp,final Boolean refresh,final String playerhp,final String playermaxhp){
@@ -94,13 +146,13 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void run() {
 
-                DisplayFarming(mobstr, mobarmor, plyrstraftr,mobname,img, next_lvl_exp_req, experience, plyrgold, plyrlvl,mobmaxhp,mobhp,refresh,playerhp,playermaxhp);
+                DisplayFarming(mobstr, mobarmor, playerarmor, plyrstraftr,mobname,img, next_lvl_exp_req, experience, plyrgold, plyrlvl,mobmaxhp,mobhp,refresh,playerhp,playermaxhp);
             }
         });
     }
 
     //Refresh the GUI in the Farming View
-    public void DisplayFarming(String mobstr, String mobarmor, String plyrstraftr,String mobname, int img,
+    public void DisplayFarming(String mobstr, String mobarmor,String playerarmor, String plyrstraftr,String mobname, int img,
                                int next_lvl_exp_req, int experience, String plyrgold, String plyrlvl,String mobmaxhp,
                                String mobhp,Boolean refresh,String playerhp,String playermaxhp)
     {
@@ -160,6 +212,9 @@ public class MainActivity extends ActionBarActivity
         TextView playerstr = (TextView)findViewById(R.id.textView_player_str_value);
         playerstr.setText(plyrstraftr);
 
+        TextView playerarmortv = (TextView)findViewById(R.id.textView_mob_armor_value);
+        playerarmortv.setText(playerarmor);
+
         TextView mstr = (TextView)findViewById(R.id.textView_mob_str_value);
         mstr.setText(mobstr);
 
@@ -215,30 +270,57 @@ public class MainActivity extends ActionBarActivity
 
     };
 
-    //BUTTON LISTENERS HERE
-    //----------------------------------------------------------------------------
+    //BUTTON LISTENERS HERE----------------------------------------------------------------------------
+
 
     //Set layout to Town
     public void buttonOnClickBackToTown(View v)
     {
+        clicksound();
         setContentView(R.layout.activity_main_1024x600);
+
+        if(!mediaPlayerMusic.isPlaying())
+        Sound("town");
+        menu = "town";
     }
 
     //Opens Shop Main Menu
     public void buttonOnClickShop(View v)
     {
+        clicksound();
         setContentView(R.layout.shoplayout);
+    }
+
+    public void buttonOnClickBackToMain(View v)
+    {
+        clicksound();
+        setContentView(R.layout.mainmenu_1204x600);
+
+        if(mediaPlayerMusic.isPlaying())
+        {}
+        else
+        {
+            Sound("title");
+            menu = "title";
+        }
+
     }
 
     //Back to Main-menu
     public void buttonOnClickMenu(View v)
     {
+        clicksound();
         setContentView(R.layout.mainmenu_1204x600);
+
+        mediaPlayerMusic.stop();
+        Sound("title");
+        menu = "title";
     }
 
     // Load the last saved Game
     public void buttonOnClickLoad(View v)
     {
+        clicksound();
         setContentView(R.layout.activity_main_1024x600);
         control.Load();
         if(!control.FullHp())
@@ -253,11 +335,15 @@ public class MainActivity extends ActionBarActivity
         };
             healthRegenThread.start();
         }
+        mediaPlayerMusic.stop();
+        Sound("town");
+        menu = "town";
     }
 
     // Create a new character and Start a new Game
     public void buttonOnClickCreateandLoad(View v)
     {
+        clicksound();
         TextView name = (TextView)findViewById(R.id.textView_name);
         Spinner race = (Spinner)findViewById(R.id.spinner_race);
         Spinner classs = (Spinner)findViewById(R.id.spinner_class);
@@ -277,17 +363,22 @@ public class MainActivity extends ActionBarActivity
 
         control.createPlayer(name.getText().toString(),race.getSelectedItem().toString(),classs.getSelectedItem().toString(),origin.getText().toString(),a);
         setContentView(R.layout.activity_main_1024x600);
+        mediaPlayerMusic.stop();
+        Sound("town");
+        menu = "town";
     }
 
     // Open farming view
     public void buttonOnClickFarming(View v)
     {
+        clicksound();
         setContentView(R.layout.farming_view_1024x600);
     }
 
     //Opens to character-creation
     public void buttonOnClickStart(View v)
     {
+        clicksound();
         setContentView(R.layout.create_character_1024x600);
 
         Spinner race_spin = (Spinner)findViewById(R.id.spinner_race);
@@ -322,9 +413,29 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
+    public void buttonOnClickBackAndRegen(View v)
+    {
+        clicksound();
+        setContentView(R.layout.activity_main_1024x600);
+
+        if(!control.FullHp())
+        {
+            healthRegenThread = new Thread()
+            {
+                public void run()
+                {
+                    control.regen();
+                }
+
+            };
+            healthRegenThread.start();
+        }
+    }
+
     //Displays the shops buy view
     public void buttonOnClickBuyView(View v)
     {
+        clicksound();
         setContentView(R.layout.shoplayout_buy);
 
         cont = getApplicationContext();
@@ -366,6 +477,7 @@ public class MainActivity extends ActionBarActivity
     //Displays the shops sell view
     public void buttonOnClickSellView(View v)
     {
+        clicksound();
         setContentView(R.layout.shoplayout_sell);
 
         cont = getApplicationContext();
@@ -403,6 +515,7 @@ public class MainActivity extends ActionBarActivity
     //Goes to Invetory View
     public void buttonOnClickInventory(View v)
     {
+        clicksound();
         setContentView(R.layout.inventorylayout_1024x600);
 
         cont = getApplicationContext();
@@ -416,20 +529,20 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onClick(View v) {
 
-                control.Equip_Unequip_Item();
-                Button cc = (Button)findViewById(R.id.button_equip);
-                TextView txt = (TextView)findViewById(R.id.textView_InvDescr);
-                txt.setText(control.PlayerItemDescription());
+                clicksound();
+                if(control.player.getMyItems().size() != 0) {
+                    control.Equip_Unequip_Item();
+                    Button cc = (Button) findViewById(R.id.button_equip);
+                    TextView txt = (TextView) findViewById(R.id.textView_InvDescr);
+                    txt.setText(control.PlayerItemDescription());
 
-                if (control.ic.PlayerItems.get(control.selectedItemId).getIsEquipped())
-                {
-                    Drawable new_image= getResources().getDrawable( R.drawable.button_unequip);
-                    cc.setBackgroundDrawable(new_image);
-                }
-                else
-                {
-                    Drawable new_image= getResources().getDrawable( R.drawable.equip_button);
-                    cc.setBackgroundDrawable(new_image);
+                    if (control.ic.PlayerItems.get(control.selectedItemId).getIsEquipped()) {
+                        Drawable new_image = getResources().getDrawable(R.drawable.button_unequip);
+                        cc.setBackgroundDrawable(new_image);
+                    } else {
+                        Drawable new_image = getResources().getDrawable(R.drawable.equip_button);
+                        cc.setBackgroundDrawable(new_image);
+                    }
                 }
             }
         });
@@ -438,8 +551,11 @@ public class MainActivity extends ActionBarActivity
         a.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                control.Drop_Item();
-                buttonOnClickInventory(v);
+                clicksound();
+                if(control.player.getMyItems().size() != 0) {
+                    control.Drop_Item();
+                    buttonOnClickInventory(v);
+                }
             }
         });
 
@@ -476,6 +592,7 @@ public class MainActivity extends ActionBarActivity
     // listener for the Start farming button
     public void buttonOnClickFarmingStart(View v)
     {
+        clicksound();
         Button btnNewButton = (Button)findViewById(R.id.button_Start);
 
         Button back = (Button)findViewById(R.id.button_back_to_town);
@@ -487,6 +604,11 @@ public class MainActivity extends ActionBarActivity
             control.farming = false;
 
 
+            Drawable new_image= getResources().getDrawable( R.drawable.wait);
+            btnNewButton.setBackgroundDrawable(new_image);
+            btnNewButton.setEnabled(false);
+
+
         } else
         {
             btnNewButton.setText("Stop");
@@ -494,6 +616,7 @@ public class MainActivity extends ActionBarActivity
             Drawable backgr = getResources().getDrawable( R.drawable.back_stop);
             back.setBackgroundDrawable(backgr);
             back.setEnabled(false);
+
 
             Drawable new_image= getResources().getDrawable( R.drawable.stop_farming_button);
             btnNewButton.setBackgroundDrawable(new_image);
@@ -522,6 +645,7 @@ public class MainActivity extends ActionBarActivity
     //Opens Stats View
     public void buttonOnClickStats(View v)
     {
+        clicksound();
         setContentView(R.layout.stats_layout);
 
         Button armorplus = (Button)findViewById(R.id.button_armor_plus);
@@ -539,6 +663,16 @@ public class MainActivity extends ActionBarActivity
         TextView upointsvalue = (TextView)findViewById(R.id.textView_upgradepoints_stats);
         upointsvalue.setText(control.getUP() + "");
 
+        TextView levelvalue = (TextView)findViewById(R.id.textView_stats_level);
+        levelvalue.setText(control.player.getLevel() + "");
+        TextView goldvalue = (TextView)findViewById(R.id.textView_stats_gold);
+        goldvalue.setText(control.player.getGold() + "");
+        TextView currenthpvalue = (TextView)findViewById(R.id.textView_stats_currenthp);
+        currenthpvalue.setText(control.player.getHealth() + " / " + control.player.getMaxhealth());
+        currenthpvalue.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+
+
         armorplus.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -546,6 +680,7 @@ public class MainActivity extends ActionBarActivity
             {
                 if(control.getUP() > 0)
                 {
+                    clicksound();
                     TextView armorvalue = (TextView)findViewById(R.id.textView_armor_value_stats);
                     TextView upointsvalue = (TextView)findViewById(R.id.textView_upgradepoints_stats);
                     control.setArmor();
@@ -563,6 +698,7 @@ public class MainActivity extends ActionBarActivity
             {
                 if(control.getUP() > 0)
                 {
+                    clicksound();
                     TextView strvalue = (TextView)findViewById(R.id.textView_str_value_stats);
                     TextView upointsvalue = (TextView)findViewById(R.id.textView_upgradepoints_stats);
                     control.setStr();
@@ -579,6 +715,7 @@ public class MainActivity extends ActionBarActivity
             {
                 if(control.getUP() > 0)
                 {
+                    clicksound();
                     TextView hpvalue = (TextView)findViewById(R.id.textView_hp_value_stats);
                     TextView upointsvalue = (TextView)findViewById(R.id.textView_upgradepoints_stats);
                     control.setHP();
@@ -594,6 +731,7 @@ public class MainActivity extends ActionBarActivity
     // listener for the Quest button
     public void buttonOnClickQuests(View v)
     {
+        clicksound();
         setContentView(R.layout.quest_layout_1024x600);
     cont = this;
         GridView gridview = (GridView) findViewById(R.id.gridView2);
@@ -627,6 +765,7 @@ public class MainActivity extends ActionBarActivity
 
     public void buttonOnClickQuestHistory(View v)
     {
+        clicksound();
         setContentView(R.layout.questhistory_layout);
 
         GridView gridview = (GridView) findViewById(R.id.gridView3);
@@ -666,6 +805,7 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onClick(View v) {
 
+                        clicksound();
                         ImageView scroll = (ImageView)findViewById(R.id.imageView_Scroll_history);
                         scroll.setVisibility(View.INVISIBLE);
 
@@ -680,6 +820,7 @@ public class MainActivity extends ActionBarActivity
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        clicksound();
 
                         ImageView scroll = (ImageView)findViewById(R.id.imageView_Scroll_history);
                         scroll.setVisibility(View.INVISIBLE);

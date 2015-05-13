@@ -61,6 +61,7 @@ public class Controller {
 
         ic.Items = new ArrayList<Item>();
         qc.Quests = new ArrayList<Quest>();
+        setPlayerLists();
 
         qc.generateQuests();
         ic.generateXitems();
@@ -169,7 +170,8 @@ public class Controller {
 
     //Updates GUI-elements on the Farming-View
     public void update() {
-        context.Kappa(mobstraftr, mobarmor, plyrstraftr,mobname, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl, mobmaxhp, mobhp, refresh,playerhp,Integer.toString(player.getMaxhealth()));
+        String a = Integer.toString(player.getArmor());
+        context.Kappa(mobstraftr, mobarmor,a, plyrstraftr,mobname, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl, mobmaxhp, mobhp, refresh,playerhp,Integer.toString(player.getMaxhealth()));
     }
 
 
