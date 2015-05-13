@@ -181,7 +181,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mob name:"
+        android:text="Mob Str:"
         android:id="@+id/textView_mob_name"
         android:layout_alignBottom="@+id/textView_player_str_value"
         android:layout_alignLeft="@+id/progressBar_mob_hp"
@@ -191,7 +191,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_mob_name_value"
+        android:id="@+id/textView_mob_str_value"
         android:layout_alignBottom="@+id/textView_mob_name"
         android:layout_toRightOf="@+id/textView_mob_name"
         android:layout_marginLeft="24dp"
@@ -216,10 +216,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_mob_armor_value"
         android:layout_alignTop="@+id/textView_mob_armor"
-        android:layout_alignLeft="@+id/textView_mob_name_value"
-        android:layout_alignStart="@+id/textView_mob_name_value"
-        android:layout_alignRight="@+id/textView_mob_name_value"
-        android:layout_alignEnd="@+id/textView_mob_name_value"
+        android:layout_alignLeft="@+id/textView_mob_str_value"
+        android:layout_alignStart="@+id/textView_mob_str_value"
+        android:layout_alignRight="@+id/textView_mob_str_value"
+        android:layout_alignEnd="@+id/textView_mob_str_value"
         android:textColor="#fffff9fc" />
 
     <ImageView
@@ -236,7 +236,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_back_to_town"
-        android:onClick="buttonOnClickLoad"
+        android:onClick="buttonOnClickBackToTown"
         android:background="@drawable/back_button"
         android:layout_below="@+id/textView_lvl_value"
         android:layout_alignLeft="@+id/button_Start"
@@ -254,5 +254,24 @@
         android:layout_alignParentEnd="true"
         android:text="Start"
         android:textColor="#00ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player Armor:"
+        android:id="@+id/textView_player_armor"
+        android:textColor="#fffff9fc"
+        android:layout_alignTop="@+id/textView_mob_armor"
+        android:layout_alignLeft="@+id/textView_player_str"
+        android:layout_alignStart="@+id/textView_player_str" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewplayer_armor_value"
+        android:textColor="#fffff9fc"
+        android:layout_alignTop="@+id/textView_player_armor"
+        android:layout_alignLeft="@+id/textView_player_str_value"
+        android:layout_alignStart="@+id/textView_player_str_value" />
 
 </RelativeLayout>

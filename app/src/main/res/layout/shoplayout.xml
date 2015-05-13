@@ -32,5 +32,5 @@
         android:background="@drawable/back_button"
         android:layout_below="@+id/button_sell_shopmain"
         android:layout_centerHorizontal="true"
-        android:onClick="buttonOnClickLoad" />
+        android:onClick="buttonOnClickBackToTown" />
 </RelativeLayout>

@@ -5,7 +5,6 @@ package com.game2.kea.class2015.boris.myapplication;
  */
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,12 +29,15 @@ public class Controller {
 
     private String plyrstr = "";
     private String plyrstraftr = "";
+    private String mobstraftr = "";
     private String mobhp = "";
+    private String playerhp = "";
     private String plyrgold = "";
     private String plyrlvl = "";
     private String mobname = "";
     private String mobarmor = "";
     private String mobmaxhp = "";
+    private String mobstr = "";
     private Boolean refresh = false;
     private Mob monster;
 
@@ -50,18 +52,26 @@ public class Controller {
         this.context = context;
         this.qc = new QuestController();
         this.ic = new ItemController();
-        ic.generateXitems(10, context);
-        qc.generateQuests();
     }
 
     //Create new Player
-    public void createPlayer(String name, String race, String classs, String origin, Drawable icon) {
+    public void createPlayer(String name, String race, String classs, String origin, int icon)
+    {
         player = new Player(name, race, origin, classs, icon);
 
+        ic.Items = new ArrayList<Item>();
+        qc.Quests = new ArrayList<Quest>();
+
+        qc.generateQuests();
+        ic.generateXitems();
+
+        SaveItems();
+        SaveQuests();
+        SavePlayer();
     }
 
     //Farming
-    //TODO: HP for player and to take dmg from mobs
+
 
     public void Farming() {
 
@@ -79,17 +89,22 @@ public class Controller {
             plyrstr = Integer.toString(player.getStr());
             mobname = monster.getName();
             mobarmor = Integer.toString(monster.getArmor());
+            mobstr = Integer.toString(monster.getStr());
             plyrstraftr = Integer.toString((monster.getHp() - dmgtaken(monster.getArmor(), monster.getHp(), player.getStr())));
+            mobstraftr = Integer.toString((player.getHealth() - dmgtaken(player.getArmor(), player.getHealth(), monster.getStr())));
             mobmaxhp = Integer.toString(monster.getHp());
             mobhp = mobmaxhp;
+            playerhp = Integer.toString(player.getHealth());
             refresh = false;
             update();
 
             do {
 
-                int hp = monster.getHp();
-                String a = Integer.toString(hp);
-                mobhp = a;
+                int hpm = monster.getHp();
+                int hpp = player.getHealth();
+
+                mobhp = Integer.toString(hpm);
+                playerhp = Integer.toString(hpp);
 
                 try {
                     Thread.sleep(500);
@@ -98,47 +113,63 @@ public class Controller {
                     e.printStackTrace();
                 }
 
-                monster.setHp(dmgtaken(monster.getArmor(), monster.getHp(),
-                        player.getStr()));
+                monster.setHp(dmgtaken(monster.getArmor(), monster.getHp(), player.getStr()));
 
-                hp = monster.getHp();
-                if (hp < 0) {
-                    hp = 0;
+                player.setHealth(dmgtaken(player.getArmor(),player.getHealth(),monster.getStr()));
+
+                hpm = monster.getHp();
+                if (hpm < 0) {
+                    hpm = 0;
                     monster.setHp(0);
                 }
-                a = Integer.toString(hp);
+                mobhp = Integer.toString(hpm);
 
-                mobhp = a;
+
+                hpp = player.getHealth();
+                if (hpp <= 0) {
+                    hpp = 0;
+                    player.setHealth(0);
+                    this.farming = false;
+                    mobhp = Integer.toString(hpm);
+                    playerhp = Integer.toString(hpp);
+
+                    break;
+                }
+                mobhp = Integer.toString(hpm);
+                playerhp = Integer.toString(hpp);
 
                 update();
 
             } while (monster.getHp() > 0);
 
-            player.setGold(player.getGold() + monster.getGold_drop());
-            player.setExperience(player.getExperience() + monster.getExp_drop());
-            plyrgold = Integer.toString(player.getGold());
-            plyrlvl = Integer.toString(player.getLevel());
+            if(player.getHealth() > 0 ) {
+                player.setGold(player.getGold() + monster.getGold_drop());
+                player.setExperience(player.getExperience() + monster.getExp_drop());
+                plyrgold = Integer.toString(player.getGold());
+                plyrlvl = Integer.toString(player.getLevel());
+                refresh = true;
+                UQP();
+            }
 
-            refresh = true;
-            UQP();
             update();
 
         } while (farming);
 
-
+        context.stopfarming();
+        Save();
     }
 
     // Damage after reduction calculator
     private static int dmgtaken(int armor, int hp, int str) {
         double s = str;
         double ar = armor;
-        double dmg = s - (s * (ar / 100));
+        double dmg = s * (100 / (ar + 100));
         return hp - (int) dmg;
     }
 
     //Updates GUI-elements on the Farming-View
     public void update() {
-        context.Kappa(plyrstr, mobname, mobarmor, plyrstraftr, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl, mobmaxhp, mobhp, refresh);
+        context.Kappa(mobstraftr, mobarmor, plyrstraftr,mobname, player.getImg(), player.getNext_lvl_exp_req(), player.getExperience(), plyrgold, plyrlvl, mobmaxhp, mobhp, refresh,playerhp,Integer.toString(player.getMaxhealth()));
     }
 
 
@@ -148,12 +179,12 @@ public class Controller {
         this.player = qc.updateQuestsProgress(player, monster);
     }
 
-    public void takereward() {
-        this.player = qc.TakeReward(selectedItemId, player);
+    public void TakeReward() {
+        this.player = qc.TakeReward(selectedItemId, player);Save();
     }
 
-    public void acceptquest() {
-        this.player = qc.AddQuestToPlayer(selectedItemId, player, context);
+    public void AcceptQuest() {
+        this.player = qc.AddQuestToPlayer(selectedItemId, player, context);Save();
     }
 
     public String getQuestDescription() {
@@ -176,7 +207,7 @@ public class Controller {
     //ITEMS-----------------------------------------------------------------------------
 
     public void Equip_Unequip_Item() {
-        this.player = ic.Equip_Unequip(player, selectedItemId, context);
+        this.player = ic.Equip_Unequip(player, selectedItemId, context);Save();
     }
 
     public String ShopItemDescription() {
@@ -188,19 +219,19 @@ public class Controller {
     }
 
     public void AddItemToPlayer() {
-        this.player = ic.AddItemtoPlayer(player, selectedItemId);
+        this.player = ic.AddItemtoPlayer(player, selectedItemId);Save();
     }
 
     public void Drop_Item() {
-        this.player = ic.DropItem(player, selectedItemId);
+        this.player = ic.DropItem(player, selectedItemId);Save();
     }
 
     public void Buy() {
-        this.player = ic.buy(player, selectedItemId, context);
+        this.player = ic.buy(player, selectedItemId, context);Save();
     }
 
     public void Sell() {
-        this.player = ic.sell(player, selectedItemId);
+        this.player = ic.sell(player, selectedItemId);Save();
     }
 
     //Saving and Loading -----------------------------------------------------
@@ -208,8 +239,34 @@ public class Controller {
 
     public void Save()
     {
-        ArrayList<Item> allItems = ic.Items;
+        SavePlayer();
+        SaveQuests();
+        SaveItems();
+    }
+
+    public void SaveQuests()
+    {
         ArrayList<Quest> allQuests = qc.Quests;
+
+        String filename;
+        FileOutputStream fos;
+
+        try {
+            filename = "Saved_Quests.xml";
+            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            oos.writeObject(allQuests);
+            oos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SaveItems()
+    {
+        ArrayList<Item> allItems = ic.Items;
 
         String filename;
         FileOutputStream fos;
@@ -223,25 +280,30 @@ public class Controller {
             oos.writeObject(allItems);
             oos.close();
 
-            filename = "Saved_Quests.xml";
-            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            oos = new ObjectOutputStream(fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            oos.writeObject(allQuests);
-            oos.close();
+    public void SavePlayer()
+    {
+        String filename;
+        FileOutputStream fos;
+
+        try {
 
             filename = "Saved_Player.xml";
             fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            oos = new ObjectOutputStream(fos);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeObject(player);
             oos.close();
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void DataForNewGame()
     {
@@ -283,6 +345,13 @@ public class Controller {
             ic.Items = (ArrayList<Item>) oos.readObject();
             oos.close();
 
+            filename = "Saved_Player.xml";
+            fos = context.openFileInput(filename);
+            oos = new ObjectInputStream(fos);
+
+            player = (Player) oos.readObject();
+            oos.close();
+
             filename = "Saved_Quests.xml";
             fos = context.openFileInput(filename);
             oos = new ObjectInputStream(fos);
@@ -290,12 +359,6 @@ public class Controller {
             qc.Quests = (ArrayList<Quest>) oos.readObject();
             oos.close();
 
-            filename = "Saved_Player.xml";
-            fos = context.openFileInput(filename);
-            oos = new ObjectInputStream(fos);
-
-            player = (Player) oos.readObject();
-            oos.close();
 
 
 
@@ -308,6 +371,7 @@ public class Controller {
 
     private void setPlayerLists()
     {
+        int a = 5;
         ic.PlayerItems = player.getMyItems();
         qc.PlayerQuests = player.getMyQuests();
     }
@@ -368,12 +432,38 @@ public class Controller {
     //Returns the player's gold
     public  int getHP()
     {
-        return player.getHealth();
+        return player.getMaxhealth();
     }
 
     public  void setHP()
     {
-        player.setHealth(player.getHealth() + 10);
+        player.setHealth(player.getMaxhealth() + 10);
+    }
+
+    public Boolean FullHp()
+    {
+        if(player.getHealth() == player.getMaxhealth())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void regen() {
+
+        do{
+        player.setHealth(player.getHealth()+1);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }}
+        while(player.getHealth() < player.getMaxhealth());
+
     }
 
     //-----------------------------------------------------------------------------------------

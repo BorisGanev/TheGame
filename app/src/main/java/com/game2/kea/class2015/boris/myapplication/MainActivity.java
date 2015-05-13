@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity
@@ -36,6 +37,22 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        try {
+            control.Load();
+        }catch(Exception e){}
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        control.Save();
+    }
+
     //Auto-generated
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -46,19 +63,46 @@ public class MainActivity extends ActionBarActivity
         return true;
     }
 
+
+
+    public void stopfarming(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button btnNewButton = (Button)findViewById(R.id.button_Start);
+
+                Button back = (Button)findViewById(R.id.button_back_to_town);
+
+                Drawable new_image= getResources().getDrawable( R.drawable.start_farming_button);
+                btnNewButton.setBackgroundDrawable(new_image);
+
+                Drawable backgr = getResources().getDrawable( R.drawable.back_button);
+                back.setBackgroundDrawable(backgr);
+                back.setEnabled(true);
+                btnNewButton.setText("Start");
+
+                control.farming = false;
+            }
+        });
+    }
     //Helper for the GUI refresh at Farming View
-    public void Kappa(final String plyrstr, final String mobname, final String mobarmor, final String plyrstraftr, final Drawable img, final int next_lvl_exp_req, final int experience, final String plyrgold, final String plyrlvl,final String mobmaxhp,final String mobhp,final Boolean refresh){
+    public void Kappa(final String mobstr, final String mobarmor,
+                      final String plyrstraftr,final String mobname, final int img, final int next_lvl_exp_req,
+                      final int experience, final String plyrgold, final String plyrlvl,final String mobmaxhp,
+                      final String mobhp,final Boolean refresh,final String playerhp,final String playermaxhp){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                DisplayFarming(plyrstr, mobname, mobarmor, plyrstraftr,img, next_lvl_exp_req, experience, plyrgold, plyrlvl,mobmaxhp,mobhp,refresh);
+                DisplayFarming(mobstr, mobarmor, plyrstraftr,mobname,img, next_lvl_exp_req, experience, plyrgold, plyrlvl,mobmaxhp,mobhp,refresh,playerhp,playermaxhp);
             }
         });
     }
 
     //Refresh the GUI in the Farming View
-    public void DisplayFarming(String plyrstr, String mobname, String mobarmor, String plyrstraftr, Drawable img, int next_lvl_exp_req, int experience, String plyrgold, String plyrlvl,String mobmaxhp,String mobhp,Boolean refresh)
+    public void DisplayFarming(String mobstr, String mobarmor, String plyrstraftr,String mobname, int img,
+                               int next_lvl_exp_req, int experience, String plyrgold, String plyrlvl,String mobmaxhp,
+                               String mobhp,Boolean refresh,String playerhp,String playermaxhp)
     {
         ProgressBar xp = (ProgressBar)findViewById(R.id.progressBar_exp);
         xp.setMax(next_lvl_exp_req);
@@ -68,8 +112,25 @@ public class MainActivity extends ActionBarActivity
         mobhpbar.setMax(Integer.parseInt(mobmaxhp));
         mobhpbar.setProgress(Integer.parseInt(mobhp));
 
-        double a = Double.parseDouble(mobhp) / Double.parseDouble(mobmaxhp);
+        ProgressBar playerhpbar = (ProgressBar)findViewById(R.id.progressBar_player_hp);
+        playerhpbar.setMax(Integer.parseInt(playermaxhp));
+        playerhpbar.setProgress(Integer.parseInt(playerhp));
 
+        double b = Double.parseDouble(playerhp) / Double.parseDouble(playermaxhp);
+        if(b*100 > 60)
+            playerhpbar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+
+        if(b*100 < 60 && b*100 > 20)
+            playerhpbar.getProgressDrawable().setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_IN);
+
+        if(b*100 < 20)
+            playerhpbar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+
+        if(playerhp.equals("0"))
+            Toast.makeText(getApplicationContext(), "You ded sun.", Toast.LENGTH_SHORT).show();
+
+
+        double a = Double.parseDouble(mobhp) / Double.parseDouble(mobmaxhp);
         if(a*100 > 60)
         mobhpbar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
 
@@ -79,11 +140,16 @@ public class MainActivity extends ActionBarActivity
         if(a*100 < 20)
             mobhpbar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
+
+
         TextView xpbar = (TextView)findViewById(R.id.textView_pbar);
         xpbar.setText(experience+"/"+next_lvl_exp_req);
 
         TextView mobhptxt = (TextView)findViewById(R.id.textView_mobhp);
         mobhptxt.setText(mobhp+"/"+mobmaxhp);
+
+        TextView playerhptxt = (TextView)findViewById(R.id.textView_playerhp);
+        playerhptxt.setText(playerhp+"/"+playermaxhp);
 
         TextView lvl = (TextView)findViewById(R.id.textView_lvl_value);
         lvl.setText(plyrlvl);
@@ -94,18 +160,19 @@ public class MainActivity extends ActionBarActivity
         TextView playerstr = (TextView)findViewById(R.id.textView_player_str_value);
         playerstr.setText(plyrstraftr);
 
-        TextView mname = (TextView)findViewById(R.id.textView_mob_name_value);
-        mname.setText(mobname);
+        TextView mstr = (TextView)findViewById(R.id.textView_mob_str_value);
+        mstr.setText(mobstr);
 
         TextView marmor = (TextView)findViewById(R.id.textView_mob_armor_value);
         marmor.setText(mobarmor);
 
         ImageView playerpic = (ImageView)findViewById(R.id.imageView_player_img);
-        int path = R.drawable.char_1;
-        playerpic.setImageResource(path);
+
+        playerpic.setImageResource(img);
 
         ImageView mobpic = (ImageView)findViewById(R.id.imageView_mob_img);
 
+        int path = 0;
         switch(mobname) {
             case "wolf":      path = R.drawable.wolf;
                 mobpic.setImageResource(path);           break;
@@ -138,6 +205,16 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+    private Thread healthRegenThread = new Thread()
+    {
+        public void run()
+        {
+           control.regen();
+        }
+
+    };
+
     //BUTTON LISTENERS HERE
     //----------------------------------------------------------------------------
 
@@ -163,6 +240,19 @@ public class MainActivity extends ActionBarActivity
     public void buttonOnClickLoad(View v)
     {
         setContentView(R.layout.activity_main_1024x600);
+        control.Load();
+        if(!control.FullHp())
+        {
+            healthRegenThread = new Thread()
+        {
+            public void run()
+            {
+                control.regen();
+            }
+
+        };
+            healthRegenThread.start();
+        }
     }
 
     // Create a new character and Start a new Game
@@ -174,7 +264,16 @@ public class MainActivity extends ActionBarActivity
         TextView origin = (TextView)findViewById(R.id.textview_origin);
         ImageView image = (ImageView)findViewById(R.id.imageView_create);
 
-        Drawable a = image.getBackground();
+        int a = 0;
+        if(race.getSelectedItemId() == 1)
+        {
+            a = R.drawable.char_2;
+        }
+        else
+        {
+            a = R.drawable.char_1;
+        }
+
 
         control.createPlayer(name.getText().toString(),race.getSelectedItem().toString(),classs.getSelectedItem().toString(),origin.getText().toString(),a);
         setContentView(R.layout.activity_main_1024x600);
@@ -385,18 +484,8 @@ public class MainActivity extends ActionBarActivity
         {
             // int a = R.drawable.start_farming_button;
             // btnNewButton.setBackgroundResource(a);
-            try{
-            Thread.sleep(1000);}catch(Exception e){}
-
-            Drawable new_image= getResources().getDrawable( R.drawable.start_farming_button);
-            btnNewButton.setBackgroundDrawable(new_image);
-
-            Drawable backgr = getResources().getDrawable( R.drawable.back_button);
-            back.setBackgroundDrawable(backgr);
-            back.setEnabled(true);
-            btnNewButton.setText("Start");
-
             control.farming = false;
+
 
         } else
         {
@@ -408,6 +497,9 @@ public class MainActivity extends ActionBarActivity
 
             Drawable new_image= getResources().getDrawable( R.drawable.stop_farming_button);
             btnNewButton.setBackgroundDrawable(new_image);
+
+            if(healthRegenThread.isAlive())
+            healthRegenThread.interrupt();
 
            Thread queryThread = new Thread()
         {
@@ -525,7 +617,7 @@ public class MainActivity extends ActionBarActivity
         btnNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                control.acceptquest();
+                control.AcceptQuest();
                 buttonOnClickQuests(v);
             }
         });
@@ -598,7 +690,7 @@ public class MainActivity extends ActionBarActivity
                         Button btn = (Button)findViewById(R.id.button_completed);
                         btn.setVisibility(View.INVISIBLE);
 
-                        control.takereward();
+                        control.TakeReward();
                         buttonOnClickQuestHistory(v);
                     }
                 });

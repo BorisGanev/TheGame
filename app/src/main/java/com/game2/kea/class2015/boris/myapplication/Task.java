@@ -1,10 +1,13 @@
 package com.game2.kea.class2015.boris.myapplication;
 
+import java.io.Serializable;
+
 /**
  * Created by oliwer on 07/05/2015.
  */
-public class Task
-{
+public class Task implements Serializable
+   {
+       private static final long serialVersionUID = 0L;
     private String mob_name;
     private int amount;
     private int progress;

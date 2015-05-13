@@ -1,13 +1,7 @@
 package com.game2.kea.class2015.boris.myapplication;
 
-import android.content.Context;
 import android.widget.Toast;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -132,66 +126,60 @@ public class ItemController {
     }
 
     //Generates a specific number of Item(s).
-    public void generateXitems(int x,MainActivity context)
+    public void generateXitems()
     {
-        int[] img = {R.drawable.standard_sword_64x64,R.drawable.armor_1,R.drawable.golden_sword};
 
-        for(int i = 0;i<x;i++)
-        {
-            generateItem("Cape of smthing", "Warrior",
-                    "Your first cape", rand.nextInt(55), 20, 5, rand.nextInt(550), img[rand.nextInt(3)],rand.nextInt(5));
-        }
-        SaveXml(context);
-        ReadXml(context);
+       // public Item(String _name, String _classs, String _description, int _str, int _hp, int _armor, int _price,int _img,int lvl)
+
+        generateItem("Leather Armor", "Warrior",
+                "Your first cape", 0, 50, 5, 150, R.drawable.armor_1,2);
+        generateItem("Leather Helmet", "Warrior",
+                "Your first cape", 0, 20, 5, 80,R.drawable.helmet_1,2);
+        generateItem("Leather Boots", "Warrior",
+                "Your first cape", 0, 20, 5, 75, R.drawable.boots_1,2);
+        generateItem("Leather Pants", "Warrior",
+                "Your first cape", 0, 20, 5, 100,R.drawable.pants_1,2);
+        generateItem("Leather Gloves", "Warrior",
+                "Your first cape", 0, 20, 5, 50,R.drawable.gloves_1,2);
+        generateItem("Iron Sword", "Warrior",
+                "Your first cape", 15, 0, 0, 100, R.drawable.sword_1,2);
+        generateItem("Wood Shield", "Warrior", "Your first cape",
+                                   0, 0, 10, 150, R.drawable.shield_1,2);
+
+
+        generateItem("Iron Armor", "Warrior",
+                "Your first cape", 0, 60, 25, 350, R.drawable.armor_2,5);
+        generateItem("Iron Helmet", "Warrior",
+                "Your first cape", 0, 35, 10, 250,R.drawable.helmet_2,5);
+        generateItem("Iron Boots", "Warrior",
+                "Your first cape", 0, 20, 10, 225, R.drawable.boots_2,5);
+        generateItem("Iron Pants", "Warrior",
+                "Your first cape",0, 35, 15, 300,R.drawable.pants_2,5);
+        generateItem("Iron Gloves", "Warrior",
+                "Your first cape", 0, 20, 10, 200,R.drawable.gloves_2,5);
+        generateItem("Steel Sword", "Warrior",
+                "Your first cape", 30, 0, 0, 340, R.drawable.sword_2,5);
+        generateItem("Iron Shield", "Warrior",
+                "Your first cape",0, 0, 25, 300, R.drawable.shield_2,5);
+
+        generateItem("Golden Armor", "Warrior",
+                "Your first cape", 0, 100, 40, 600, R.drawable.armor_3,11);
+        generateItem("Golden Helmet", "Warrior",
+                "Your first cape", 0, 60, 40, 600,R.drawable.helmet_3,11);
+        generateItem("Golden Boots", "Warrior",
+                "Your first cape", 0, 50, 40, 600, R.drawable.boots_3,11);
+        generateItem("Golden Pants", "Warrior",
+                "Your first cape",0, 50, 40, 600,R.drawable.pants_3,11);
+        generateItem("Golden Gloves", "Warrior",
+                "Your first cape", 0, 50, 40, 600,R.drawable.gloves_3,11);
+        generateItem("Golden Sword", "Warrior",
+                "Your first cape", 60, 0, 0, 660, R.drawable.sword_3,11);
+        generateItem("Golden Shield", "Warrior",
+                "Your first cape",0, 0, 50, 600, R.drawable.shield_3,11);
+
     }
 
-    public void SaveXml(MainActivity context)
-    {
-        ArrayList<Item> allItems = Items;
 
-        for(int i = 0;i< PlayerItems.size();i++)
-        {
-            allItems.add(PlayerItems.get(i));
-        }
-
-        String filename = "Saved_Items.xml";
-
-        FileOutputStream fos;
-
-        try {
-
-            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-            oos.writeObject(allItems);
-            oos.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void ReadXml(MainActivity context)
-    {
-        String filename = "Saved_Items.xml";
-        FileInputStream fos;
-
-        try {
-
-            fos = context.openFileInput(filename);
-            ObjectInputStream oos = new ObjectInputStream(fos);
-
-
-            Items = (ArrayList<Item>) oos.readObject();
-            oos.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        setPlayerItems();
-
-    }
 
     private void setPlayerItems()
     {

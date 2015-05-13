@@ -1,10 +1,13 @@
 package com.game2.kea.class2015.boris.myapplication;
 
+import java.io.Serializable;
+
 /**
  * Created by oliwer on 07/05/2015.
  */
-public class Quest
+public class Quest implements Serializable
 {
+    private static final long serialVersionUID = 0L;
     private String name;
     private String description;
     private Boolean isAccepted;

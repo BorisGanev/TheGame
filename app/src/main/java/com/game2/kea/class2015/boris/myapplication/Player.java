@@ -4,15 +4,15 @@ package com.game2.kea.class2015.boris.myapplication;
  * Created by oliwer on 16/04/2015.
  */
 
-import android.graphics.drawable.Drawable;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by oliwer on 23/03/2015.
  */
-public class Player
+public class Player implements Serializable
 {
+    private static final long serialVersionUID = 0L;
 
     private String name;
     private String race;
@@ -21,7 +21,7 @@ public class Player
     private String classs;
     private int next_lvl_exp_req;
     private int last_lvl_exp_req;
-    private Drawable img;
+    private int img;
 
     //stats
 
@@ -33,12 +33,13 @@ public class Player
     private int str;
     private int armor;
     private int health;
+    private int maxhealth;
 
     private ArrayList<Item> MyItems = new ArrayList<Item>();
     private ArrayList<Quest> MyQuests = new ArrayList<Quest>();
 
 
-    public Player(String _name, String _race, String _origin, String _classs, Drawable icon)
+    public Player(String _name, String _race, String _origin, String _classs, int icon)
     {
         this.name = _name;
         this.race = _race;
@@ -48,6 +49,7 @@ public class Player
         this.level = 1;
         this.upgrade_points = 0;
         this.health = 100;
+        this.maxhealth = 100;
         this.str = 10;
         this.armor = 5;
         this.experience = 0;
@@ -151,12 +153,12 @@ public class Player
     }
 
 
-    public Drawable getImg()
+    public int getImg()
     {
         return img;
     }
 
-    public void setImg(Drawable img)
+    public void setImg(int img)
     {
         this.img = img;
     }
@@ -215,7 +217,7 @@ public class Player
         {
             this.armor = this.armor + this.MyItems.get(i).getArmor();
             this.str = this.str + this.MyItems.get(i).getStr();
-            this.health = this.health + this.MyItems.get(i).getHp();
+            this.maxhealth = this.maxhealth + this.MyItems.get(i).getHp();
         }
     }
 
@@ -225,7 +227,7 @@ public class Player
         {
             this.armor = this.armor - this.MyItems.get(i).getArmor();
             this.str = this.str - this.MyItems.get(i).getStr();
-            this.health = this.health - this.MyItems.get(i).getHp();
+            this.maxhealth = this.maxhealth - this.MyItems.get(i).getHp();
         }
     }
 
@@ -239,8 +241,19 @@ public class Player
         this.level += reward.getLvl();
         this.str += reward.getStr();
         this.armor += reward.getArmor();
-        this.health += reward.getHp();
+        this.maxhealth += reward.getHp();
         addNewItem(reward.getItem());
 
     }
+
+
+    public int getMaxhealth() {
+        return maxhealth;
+    }
+
+    public void setMaxhealth(int maxhealth) {
+        this.maxhealth = maxhealth;
+    }
+
+
 }

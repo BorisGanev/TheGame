@@ -1,10 +1,13 @@
 package com.game2.kea.class2015.boris.myapplication;
 
+import java.io.Serializable;
+
 /**
  * Created by oliwer on 07/05/2015.
  */
-public class Rewards
+public class Rewards implements Serializable
 {
+    private static final long serialVersionUID = 0L;
     private int xp;
     private int lvl;
     private Item item;
